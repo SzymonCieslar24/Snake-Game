@@ -2,22 +2,25 @@
 
 void Game::startGame() {
 	sf::RenderWindow window(sf::VideoMode(1920, 1088), "Snake Game", sf::Style::Close);
-	ResourcesMan::loadFont("fonts/Pacifico-Regular.ttf", "primary");
+	ResourcesMan::loadFont("fonts/Sriracha-Regular.ttf", "primary");
+	ResourcesMan::loadFont("fonts/ShantellSans-Regular.ttf", "secondary");
+	ResourcesMan::loadBoardTexture("textures/wall.png", "wallTex");
+	ResourcesMan::loadBoardTexture("textures/grass.png", "grassTex");
+	ResourcesMan::loadSnakeTexture("textures/snakeHeadUp.png", "textures/snakeBodyUpDown.png", "textures/snakeTailUp.png", ResourcesMan::Up);
+	ResourcesMan::loadSnakeTexture("textures/snakeHeadRight.png", "textures/snakeBodyLeftRight.png", "textures/snakeTailRight.png", ResourcesMan::Right);
+	ResourcesMan::loadSnakeTexture("textures/snakeHeadDown.png", "textures/snakeBodyUpDown.png", "textures/snakeTailDown.png", ResourcesMan::Down);
+	ResourcesMan::loadSnakeTexture("textures/snakeHeadLeft.png", "textures/snakeBodyLeftRight.png", "textures/snakeTailLeft.png", ResourcesMan::Left);
 	Main_menu menu;
 	menu.show_menu(window);
 }
 
 void Game::initMap(sf::RenderWindow &window) {
-	wall_tex.loadFromFile("textures/wall.png");
-	grass_tex.loadFromFile("textures/grass.png");
-	wall_tex.setRepeated(true);
-	grass_tex.setRepeated(true);
-	grass.setTexture(grass_tex);
+	grass.setTexture(ResourcesMan::getBoardTexture("grassTex"));
 	int windowX = (int)window.getSize().x;
 	int windowY = (int)window.getSize().y;
 	for (int i = 0; i < walls.size(); i++) 
 	{
-		walls[i].setTexture(wall_tex);
+		walls[i].setTexture(ResourcesMan::getBoardTexture("wallTex"));
 	}
 	grass.setTextureRect({ 0,0, windowX, windowY });
 	walls[0].setTextureRect({0,0, windowX, 32});
@@ -37,19 +40,23 @@ void Game::drawWalls(sf::RenderWindow& window) {
 	}
 }
 
-void Game::update(sf::Time& time) {
+void Game::update(sf::Time& time, sf::RenderWindow& window) {
 	pastTime += time;
 	if (pastTime.asSeconds() > 2)
 	{
-		//for (auto& wall : m_walls)
-		//{
-		//	if (m_snake.IsOn(wall))
-		//	{
-		//		m_context->m_states->Add(std::make_unique<GameOver>(m_context), true);
-		//		break;
-		//	}
-		//}
-
+		for (auto& wall : walls)
+		{
+			if (snake.isSnakeOnSmth(wall)) {
+				GameOver g;
+				g.show_gameOver(window);
+				break;
+			}
+		}
+		if (snake.isSelfEating())
+		{
+			GameOver g;
+			g.show_gameOver(window);
+		}
 		//if (m_snake.IsOn(m_food))
 		//{
 		//	m_snake.Grow(m_snakeDirection);
@@ -62,13 +69,7 @@ void Game::update(sf::Time& time) {
 		//	m_score += 1;
 		//	m_scoreText.setString("Score : " + std::to_string(m_score));
 		//}
-		snake.moveSnake(snakeDirection);
-
-		//if (m_snake.IsSelfIntersecting())
-		//{
-		//	m_context->m_states->Add(std::make_unique<GameOver>(m_context), true);
-		//}
-
+		snake.moveSnake(snakeDirection, dir);
 		pastTime = sf::Time::Zero;
 	}
 }
@@ -76,7 +77,7 @@ void Game::update(sf::Time& time) {
 void Game::gameOptions(sf::RenderWindow& window) {
 	while (window.isOpen()) {
 		sf::Event e;
-		update(timePerFrame);
+		update(timePerFrame,window);
 		while (window.pollEvent(e)) {
 			if (e.type == sf::Event::Closed)
 			{
@@ -85,19 +86,24 @@ void Game::gameOptions(sf::RenderWindow& window) {
 			else if (e.type == sf::Event::KeyPressed)
 			{
 				sf::Vector2f newDirection = snakeDirection;
+				ResourcesMan::Direction newdir = dir;
 				switch (e.key.code)
 				{
 				case sf::Keyboard::Up:
 					newDirection = { 0.f, -32.f };
+					newdir = ResourcesMan::Up;
 					break;
 				case sf::Keyboard::Down:
 					newDirection = { 0.f, 32.f };
+					newdir = ResourcesMan::Down;
 					break;
 				case sf::Keyboard::Left:
 					newDirection = { -32.f, 0.f };
+					newdir = ResourcesMan::Left;
 					break;
 				case sf::Keyboard::Right:
 					newDirection = { 32.f, 0.f };
+					newdir = ResourcesMan::Right;
 					break;
 				case sf::Keyboard::Escape:
 					//Pause Menu
@@ -109,6 +115,7 @@ void Game::gameOptions(sf::RenderWindow& window) {
 					std::abs(snakeDirection.y) != std::abs(newDirection.y))
 				{
 					snakeDirection = newDirection;
+					dir = newdir;
 				}
 			}
 		}

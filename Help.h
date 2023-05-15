@@ -9,8 +9,6 @@ class Help {
 private:
 	sf::Text txt1;
 	sf::Text txt2;
-	sf::Font font;
-	sf::Font font2;
 	Button quitBtn;
 
 public:

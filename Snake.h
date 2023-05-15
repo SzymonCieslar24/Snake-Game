@@ -6,11 +6,10 @@
 #include <algorithm>
 #include <SFML/Graphics.hpp>
 
+#include "ResourcesManager.h"
+
 class Snake {
 private:
-	sf::Texture snakeBodyTex;
-	sf::Texture snakeHeadTex;
-	sf::Texture snakeTailTex;
 	sf::Vector2f startPos;
 	sf::Vector2f oldHeadPos;
 	std::list<sf::Sprite> snakeBody;
@@ -19,7 +18,8 @@ private:
 public:
 	void initSnake();
 	void drawSnake(sf::RenderWindow &window);
-	void moveSnake(sf::Vector2f &moveDirection);
+	void moveSnake(sf::Vector2f &moveDirection, ResourcesMan::Direction dir);
+	void updateTextures(ResourcesMan::Direction dir);
 	void growSnake();
 	bool isSnakeOnSmth(sf::Sprite &something);
 	bool isSelfEating();
