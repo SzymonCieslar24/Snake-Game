@@ -11,16 +11,17 @@
 class Snake {
 private:
 	sf::Vector2f startPos;
-	sf::Vector2f oldHeadPos;
+	ResourcesMan::Direction startDir;
 	std::list<sf::Sprite> snakeBody;
 	std::list<sf::Sprite>::iterator snakeHead;
 	std::list<sf::Sprite>::iterator snakeTail;
+	int snakeSize = 5;
 public:
 	void initSnake();
-	void drawSnake(sf::RenderWindow &window);
-	void moveSnake(sf::Vector2f &moveDirection, ResourcesMan::Direction dir);
-	void updateTextures(ResourcesMan::Direction dir);
+	void drawSnake(sf::RenderWindow& window);
+	ResourcesMan::Direction getPieceDirection(sf::Vector2f oldPosition, sf::Vector2f& moveDirection);
+	void moveSnake(sf::Vector2f& moveDirection);
 	void growSnake();
-	bool isSnakeOnSmth(sf::Sprite &something);
+	bool isSnakeOnSmth(sf::Sprite& something);
 	bool isSelfEating();
 };

@@ -8,11 +8,14 @@ std::array<sf::Texture, 3> ResourcesMan::snakeTexDown;
 std::array<sf::Texture, 3> ResourcesMan::snakeTexLeft;
 sf::Texture ResourcesMan::grassTex;
 sf::Texture ResourcesMan::wallTex;
+sf::Texture ResourcesMan::appleTex;
+sf::Texture ResourcesMan::bananaTex;
+sf::Texture ResourcesMan::orangeTex;
 sf::Texture ResourcesMan::snakeHeadTex;
 sf::Texture ResourcesMan::snakeBodyTex;
 sf::Texture ResourcesMan::snakeTailTex;
 
-void ResourcesMan::loadFont (const std::string& filename, const std::string& name) {
+void ResourcesMan::loadFont(const std::string& filename, const std::string& name) {
     if (!std::filesystem::exists(filename)) {
         std::cout << "Font file not found: " << filename << std::endl;
         return;
@@ -56,14 +59,26 @@ void ResourcesMan::loadTexture(const std::string& filename, sf::Texture& tex) {
         return;
     }
 }
-void ResourcesMan::loadBoardTexture (const std::string& filename, const std::string& name) {
-    if (name == "grassTex") {
+void ResourcesMan::loadBoardTexture(const std::string& filename, const std::string& name) {
+    if (name == "grass") {
         loadTexture(filename, grassTex);
         grassTex.setRepeated(true);
     }
-    else if (name == "wallTex") {
+    else if (name == "wall") {
         loadTexture(filename, wallTex);
         wallTex.setRepeated(true);
+    }
+    else if (name == "apple") {
+        loadTexture(filename, appleTex);
+        appleTex.setRepeated(false);
+    }
+    else if (name == "banana") {
+        loadTexture(filename, bananaTex);
+        bananaTex.setRepeated(false);
+    }
+    else if (name == "orange") {
+        loadTexture(filename, orangeTex);
+        orangeTex.setRepeated(false);
     }
     else {
         std::cout << "Invalid texture name: " << name << std::endl;
@@ -71,11 +86,20 @@ void ResourcesMan::loadBoardTexture (const std::string& filename, const std::str
 }
 
 sf::Texture& ResourcesMan::getBoardTexture(const std::string& name) {
-    if (name == "grassTex") {
+    if (name == "grass") {
         return grassTex;
     }
-    else if (name == "wallTex") {
+    else if (name == "wall") {
         return wallTex;
+    }
+    else if (name == "apple") {
+        return appleTex;
+    }
+    else if (name == "banana") {
+        return bananaTex;
+    }
+    else if (name == "orange") {
+        return orangeTex;
     }
     std::cout << "Texture not found: " << name << std::endl;
 }
@@ -103,18 +127,19 @@ void ResourcesMan::loadSnakeTexture(const std::string& snakeHead, const std::str
         snakeTexLeft[2] = snakeTailTex;
     }
 }
-std::array<sf::Texture, 3>& ResourcesMan::getSnakeTexture(const std::string& name) {
-    if (name == "snakeTexUp") {
+
+std::array<sf::Texture, 3>& ResourcesMan::getSnakeTexture(ResourcesMan::Direction dir) {
+    if (dir == Up) {
         return snakeTexUp;
     }
-    else if (name == "snakeTexRight") {
+    else if (dir == Right) {
         return snakeTexRight;
     }
-    else if (name == "snakeTexDown") {
+    else if (dir == Down) {
         return snakeTexDown;
     }
-    else if (name == "snakeTexLeft") {
+    else if (dir == Left) {
         return snakeTexLeft;
     }
-    std::cout << "Textures array not found: " << name << std::endl;
+    std::cout << "Textures array not found: " << std::endl;
 }
