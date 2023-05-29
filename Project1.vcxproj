@@ -166,8 +166,11 @@
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Orange.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
+    <ClCompile Include="Save.cpp" />
     <ClCompile Include="Snake.cpp" />
+    <ClCompile Include="Strawberry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Apple.h" />
@@ -178,8 +181,11 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Help.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Orange.h" />
     <ClInclude Include="ResourcesManager.h" />
+    <ClInclude Include="Save.h" />
     <ClInclude Include="Snake.h" />
+    <ClInclude Include="Strawberry.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

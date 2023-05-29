@@ -11,6 +11,7 @@ sf::Texture ResourcesMan::wallTex;
 sf::Texture ResourcesMan::appleTex;
 sf::Texture ResourcesMan::bananaTex;
 sf::Texture ResourcesMan::orangeTex;
+sf::Texture ResourcesMan::strawberryTex;
 sf::Texture ResourcesMan::snakeHeadTex;
 sf::Texture ResourcesMan::snakeBodyTex;
 sf::Texture ResourcesMan::snakeTailTex;
@@ -59,30 +60,38 @@ void ResourcesMan::loadTexture(const std::string& filename, sf::Texture& tex) {
         return;
     }
 }
-void ResourcesMan::loadBoardTexture(const std::string& filename, const std::string& name) {
-    if (name == "grass") {
-        loadTexture(filename, grassTex);
-        grassTex.setRepeated(true);
+void ResourcesMan::loadBoardTexture(const std::string& filename) {
+    std::regex base_regex ("([^/]+)(?=\\.png)");
+    std::smatch base_match;
+    if (std::regex_search(filename, base_match, base_regex)) {
+        std::string textureName = base_match.str(1);
+        if (textureName == "grass") {
+            loadTexture(filename, grassTex);
+            grassTex.setRepeated(true);
+        }
+        else if (textureName == "wall") {
+            loadTexture(filename, wallTex);
+            wallTex.setRepeated(true);
+        }
+        else if (textureName == "apple") {
+            loadTexture(filename, appleTex);
+            appleTex.setRepeated(false);
+        }
+        else if (textureName == "banana") {
+            loadTexture(filename, bananaTex);
+            bananaTex.setRepeated(false);
+        }
+        else if (textureName == "orange") {
+            loadTexture(filename, orangeTex);
+            orangeTex.setRepeated(false);
+        }
+        else if (textureName == "strawberry") {
+            loadTexture(filename, strawberryTex);
+            strawberryTex.setRepeated(false);
+        }
     }
-    else if (name == "wall") {
-        loadTexture(filename, wallTex);
-        wallTex.setRepeated(true);
-    }
-    else if (name == "apple") {
-        loadTexture(filename, appleTex);
-        appleTex.setRepeated(false);
-    }
-    else if (name == "banana") {
-        loadTexture(filename, bananaTex);
-        bananaTex.setRepeated(false);
-    }
-    else if (name == "orange") {
-        loadTexture(filename, orangeTex);
-        orangeTex.setRepeated(false);
-    }
-    else {
-        std::cout << "Invalid texture name: " << name << std::endl;
-    }
+    else
+        std::cout << "Filename do not match any texture." << std::endl;
 }
 
 sf::Texture& ResourcesMan::getBoardTexture(const std::string& name) {
@@ -101,6 +110,9 @@ sf::Texture& ResourcesMan::getBoardTexture(const std::string& name) {
     else if (name == "orange") {
         return orangeTex;
     }
+    else if (name == "strawberry") {
+        return strawberryTex;
+    }
     std::cout << "Texture not found: " << name << std::endl;
 }
 
@@ -108,6 +120,9 @@ void ResourcesMan::loadSnakeTexture(const std::string& snakeHead, const std::str
     loadTexture(snakeHead, snakeHeadTex);
     loadTexture(snakeBody, snakeBodyTex);
     loadTexture(snakeTail, snakeTailTex);
+    //base_regex = ("([^/]+)(?=\\.png)");
+    //if (std::regex_search(snakeHead, base_match, base_regex)) {
+    //    std::string textureName = base_match.str(1);
     switch (dir) {
     case Up:
         snakeTexUp[0] = snakeHeadTex;

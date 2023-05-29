@@ -8,9 +8,10 @@
 #include "Snake.h"
 #include "MainMenu.h"
 #include "GameOver.h"
-#include "Fruit.h"
 #include "Apple.h"
 #include "Banana.h"
+#include "Orange.h"
+#include "Strawberry.h"
 
 class Game {
 private:
@@ -18,20 +19,33 @@ private:
 	std::array<sf::Sprite, 4> walls;
 	sf::Text scoreText;
 	sf::Text timeText;
+	sf::Text pauseText;
+	sf::Text pauseInfo;
 	sf::Clock clk;
 	sf::Time gameTime;
-	int score = 0;
-	sf::Time pastTime = sf::Time::Zero;
-	sf::Time timePerFrame = sf::seconds(1.f / 60.f);
-	sf::Vector2f snakeDirection = { 0.f, -32.f };
+	sf::Time pauseTime;
+	sf::Time pauseStart;
+	static int score;
+	bool isPaused;
+	bool isReverse;
+	bool isImmune;
+	float speed;
+	sf::Time pastTime;
+	sf::Time timePerFrame;
+	sf::Vector2f snakeDirection;
 	Snake snake;
-	Apple* applePtr = new Apple;
-	Banana* bananaPtr = new Banana;
-	Fruit* fruitPtr = bananaPtr;
+	Apple* applePtr;
+	Banana* bananaPtr;
+	Orange* orangePtr;
+	Strawberry* strawberryPtr;
+	Fruit* fruitPtr;
 public:
 	void startGame();
 	void initMap(sf::RenderWindow& window);
 	void drawWalls(sf::RenderWindow& window);
 	void update(sf::Time& time, sf::RenderWindow& window);
+	sf::Vector2f& generateFruitPos(sf::RenderWindow& window);
+	void timeInGame();
+	static int getScore();
 	void gameOptions(sf::RenderWindow& window);
 };
