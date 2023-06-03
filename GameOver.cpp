@@ -10,13 +10,13 @@ void GameOver::show_gameOver(sf::RenderWindow& window) {
 	txt1.setCharacterSize(180);
 	txt1.setFont(ResourcesMan::getFont("primary"));
 	txt1.setFillColor(sf::Color::Red);
-	txt1.setPosition(window.getSize().x / 2.0f, (window.getSize().y / 2.0f) - 300.0f);
+	txt1.setPosition(xPos, yPos - 300.0f);
 	txt1.setOrigin(txt1.getLocalBounds().left + txt1.getLocalBounds().width / 2.0f, txt1.getLocalBounds().top + txt1.getLocalBounds().height / 2.0f);
 	txt2.setString("Your score: " + std::to_string(Game::getScore()));
 	txt2.setCharacterSize(100);
 	txt2.setFont(ResourcesMan::getFont("primary"));
 	txt2.setFillColor(sf::Color::White);
-	txt2.setPosition(window.getSize().x / 2.0f, (window.getSize().y / 2.0f) - 150.0f);
+	txt2.setPosition(xPos, yPos - 150.0f);
 	txt2.setOrigin(txt2.getLocalBounds().left + txt2.getLocalBounds().width / 2.0f, txt2.getLocalBounds().top + txt2.getLocalBounds().height / 2.0f);
 	gameOver_option(window);
 }

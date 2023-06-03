@@ -46,6 +46,6 @@ public:
 	void update(sf::Time& time, sf::RenderWindow& window);
 	sf::Vector2f& generateFruitPos(sf::RenderWindow& window);
 	void timeInGame();
-	static int getScore();
+	static int& getScore();
 	void gameOptions(sf::RenderWindow& window);
 };

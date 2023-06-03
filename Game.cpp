@@ -152,7 +152,7 @@ void Game::timeInGame() {
 	timeText.setString("Time in game: " + std::to_string(minutes) + ":" + std::to_string(seconds));
 }
 
-int Game::getScore() {
+int& Game::getScore() {
 	return score;
 }
 

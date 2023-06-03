@@ -9,13 +9,13 @@ void Help::show_help(sf::RenderWindow& window) {
 	txt1.setCharacterSize(120);
 	txt1.setFont(ResourcesMan::getFont("primary"));
 	txt1.setFillColor(sf::Color::Green);
-	txt1.setPosition(window.getSize().x / 2.0f, (window.getSize().y / 2.0f) - 300.0f);
+	txt1.setPosition(xPos, yPos - 300.0f);
 	txt1.setOrigin(txt1.getLocalBounds().left + txt1.getLocalBounds().width / 2.0f, txt1.getLocalBounds().top + txt1.getLocalBounds().height / 2.0f);
 	txt2.setString("This is the simple snake game. \nYou control snake with WASD or by using arrows on your keyboard. \nYour aim is to earn the highest score by eating fruits that appreas on the ground. \nAfter eating the fruit the snake grows depending on different fruit. \nThe game ends when snake hits the wall or his own body.");
 	txt2.setCharacterSize(40);
 	txt2.setFont(ResourcesMan::getFont("secondary"));
 	txt2.setFillColor(sf::Color::White);
-	txt2.setPosition(window.getSize().x / 2.0f, (window.getSize().y / 2.0f) - 50.0f);
+	txt2.setPosition(xPos, yPos - 50.0f);
 	txt2.setOrigin(txt2.getLocalBounds().left + txt2.getLocalBounds().width / 2.0f, txt2.getLocalBounds().top + txt2.getLocalBounds().height / 2.0f);
 	help_option(window);
 }
