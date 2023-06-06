@@ -1,17 +1,23 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
-#include "Button.h"
+#include "Scene.h"
+#include "MainMenu.h"
 
-class Help {
+import Button;
+import ResourcesManager;
+
+class Help : public Scene{
 private:
-	sf::Text txt1;
-	sf::Text txt2;
+	sf::Text howToTxt;
+	sf::Text helpTxt;
 	Button quitBtn;
-
+	std::unique_ptr<Scene> scenePtr;
 public:
-	void show_help(sf::RenderWindow& window);
-	void help_option(sf::RenderWindow& window);
+	Help();
+	virtual void setScene(sf::RenderWindow& window);
+	virtual void windowHandle(sf::RenderWindow& window);
 };

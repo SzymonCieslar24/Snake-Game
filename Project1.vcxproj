@@ -159,35 +159,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Apple.cpp" />
-    <ClCompile Include="Banana.cpp" />
+    <ClCompile Include="Apple.ixx" />
+    <ClCompile Include="Banana.ixx" />
+    <ClCompile Include="Button.ixx" />
+    <ClCompile Include="Fruit.ixx" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="Leaderboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="Orange.cpp" />
-    <ClCompile Include="ResourcesManager.cpp" />
+    <ClCompile Include="Orange.ixx" />
+    <ClCompile Include="ResourcesManager.ixx" />
     <ClCompile Include="Save.cpp" />
-    <ClCompile Include="Snake.cpp" />
-    <ClCompile Include="Strawberry.cpp" />
+    <ClCompile Include="Snake.ixx" />
+    <ClCompile Include="Strawberry.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Apple.h" />
-    <ClInclude Include="Banana.h" />
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="Fruit.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Help.h" />
     <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="MainMenu.h" />
-    <ClInclude Include="Orange.h" />
-    <ClInclude Include="ResourcesManager.h" />
     <ClInclude Include="Save.h" />
-    <ClInclude Include="Snake.h" />
-    <ClInclude Include="Strawberry.h" />
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,23 +1,28 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
-#include "Button.h"
+#include "Scene.h"
 #include "Help.h"
 #include "Game.h"
 #include "Leaderboard.h"
-#include "ResourcesManager.h"
 
-class Main_menu {
+import Button;
+import ResourcesManager;
+
+class Main_menu : public Scene {
 private:
-	sf::Text txt1;
-	sf::Text txt2;
+	sf::Text snakeTxt;
+	sf::Text gameTxt;
 	Button playBtn;
 	Button helpBtn;
 	Button quitBtn;
 	Button leaderBtn;
+	std::unique_ptr<Scene> scenePtr;
 public:
-	void show_menu(sf::RenderWindow& window);
-	void menu_option(sf::RenderWindow& window);
+	Main_menu();
+	virtual void setScene(sf::RenderWindow& window);
+	virtual void windowHandle(sf::RenderWindow& window);
 };

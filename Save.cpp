@@ -1,26 +1,27 @@
 #include "Save.h"
 
-void Save::show_save(sf::RenderWindow& window) {
+Save::Save():
+	saveTxt("Type your nickname in the textbox below.", ResourcesMan::getFont("secondary"),50),
+	inputTxt("", ResourcesMan::getFont("primary"),80),
+	returnInfoTxt("Your nick should consist of letters and optionally numbers.", ResourcesMan::getFont("secondary"),50),
+	menuBtn("Go back to main menu", ResourcesMan::getFont("primary"), 60, { 800, 100 }, sf::Color(110, 120, 110), sf::Color::White),
+	scenePtr(nullptr)
+{
+	saveTxt.setFillColor(sf::Color::White);
+	saveTxt.setOrigin(saveTxt.getLocalBounds().left + saveTxt.getLocalBounds().width / 2.0f, saveTxt.getLocalBounds().top + saveTxt.getLocalBounds().height / 2.0f);
+	inputTxt.setFillColor(sf::Color::White);
+	returnInfoTxt.setFillColor(sf::Color::White);
+	returnInfoTxt.setOrigin(returnInfoTxt.getLocalBounds().left + returnInfoTxt.getLocalBounds().width / 2.0f, returnInfoTxt.getLocalBounds().top + returnInfoTxt.getLocalBounds().height / 2.0f);
+}
+
+void Save::setScene(sf::RenderWindow& window) {
 	float xPos = window.getSize().x / 2.f;
 	float yPos = window.getSize().y / 2.f;
-	menuBtn.init("Go back to main menu", ResourcesMan::getFont("primary"), 60, { 800, 100 }, { xPos, yPos + 300}, sf::Color(110, 120, 110), sf::Color::White);
-	info.setString("Type your nickname in the textbox below.");
-	info.setCharacterSize(50);
-	info.setFont(ResourcesMan::getFont("secondary"));
-	info.setFillColor(sf::Color::White);
-	info.setPosition(xPos, yPos - 150.0f);
-	info.setOrigin(info.getLocalBounds().left + info.getLocalBounds().width / 2.0f, info.getLocalBounds().top + info.getLocalBounds().height / 2.0f);
-	input.setCharacterSize(80);
-	input.setFont(ResourcesMan::getFont("primary"));
-	input.setFillColor(sf::Color::White);
-	input.setPosition(xPos, yPos);
-	returnInfo.setString("Your nick should consist of letters and optionally numbers.");
-	returnInfo.setCharacterSize(50);
-	returnInfo.setFont(ResourcesMan::getFont("secondary"));
-	returnInfo.setFillColor(sf::Color::White);
-	returnInfo.setPosition(xPos, yPos + 150.0f);
-	returnInfo.setOrigin(returnInfo.getLocalBounds().left + returnInfo.getLocalBounds().width / 2.0f, returnInfo.getLocalBounds().top + returnInfo.getLocalBounds().height / 2.0f);
-	save_option(window);
+	menuBtn.setBtnPosition({ xPos, yPos + 300});
+	saveTxt.setPosition(xPos, yPos - 150.0f);
+	inputTxt.setPosition(xPos, yPos);
+	returnInfoTxt.setPosition(xPos, yPos + 150.0f);
+	windowHandle(window);
 }
 
 void Save::savePlayerData(std::string& playerName, int& score) {
@@ -39,7 +40,7 @@ void Save::savePlayerData(std::string& playerName, int& score) {
 	}
 }
 
-void Save::save_option(sf::RenderWindow& window) {
+void Save::windowHandle(sf::RenderWindow& window) {
 	while (window.isOpen()) {
 		sf::Event e;
 		while (window.pollEvent(e)) {
@@ -55,8 +56,8 @@ void Save::save_option(sf::RenderWindow& window) {
 			case sf::Event::MouseButtonPressed:
 				if (e.mouseButton.button == sf::Mouse::Left) {
 					if (menuBtn.isMouseHover(window)) {
-						Main_menu m;
-						m.show_menu(window);
+						scenePtr = std::make_unique<Main_menu>();
+						scenePtr->setScene(window);
 						break;
 					}
 				}
@@ -75,29 +76,29 @@ void Save::save_option(sf::RenderWindow& window) {
 						std::regex pattern ("^[A-Za-z]+[A-Za-z0-9]*$");
 						if (std::regex_match(inputStr, pattern)) {
 							savePlayerData(inputStr, Game::getScore());
-							Main_menu m;
-							m.show_menu(window);
+							scenePtr = std::make_unique<Main_menu>();
+							scenePtr->setScene(window);
 							break;
 						}
 						else {
-							returnInfo.setString("Invalid nickname! Only letters and numbers are allowed!");
-							returnInfo.setFillColor(sf::Color::Red);
-							returnInfo.setOrigin(returnInfo.getLocalBounds().left + returnInfo.getLocalBounds().width / 2.0f, returnInfo.getLocalBounds().top + returnInfo.getLocalBounds().height / 2.0f);
+							returnInfoTxt.setString("Invalid nickname! Only letters and numbers are allowed!");
+							returnInfoTxt.setFillColor(sf::Color::Red);
+							returnInfoTxt.setOrigin(returnInfoTxt.getLocalBounds().left + returnInfoTxt.getLocalBounds().width / 2.0f, returnInfoTxt.getLocalBounds().top + returnInfoTxt.getLocalBounds().height / 2.0f);
 						}
 					}
 					else
 					{
 						inputStr += static_cast<char>(e.text.unicode);
 					}
-					input.setString(inputStr);
-					input.setOrigin(input.getLocalBounds().left + input.getLocalBounds().width / 2.0f, input.getLocalBounds().top + input.getLocalBounds().height / 2.0f);
+					inputTxt.setString(inputStr);
+					inputTxt.setOrigin(inputTxt.getLocalBounds().left + inputTxt.getLocalBounds().width / 2.0f, inputTxt.getLocalBounds().top + inputTxt.getLocalBounds().height / 2.0f);
 				}
 			}
 		}
 	window.clear();
-	window.draw(info);
-	window.draw(input);
-	window.draw(returnInfo);
+	window.draw(saveTxt);
+	window.draw(inputTxt);
+	window.draw(returnInfoTxt);
 	menuBtn.drawTo(window);
 	window.display();
 	}

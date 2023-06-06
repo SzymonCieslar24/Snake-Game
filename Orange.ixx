@@ -1,4 +1,18 @@
-#include "Orange.h"
+export module Orange;
+
+import <SFML/Graphics.hpp>;
+import Fruit;
+import ResourcesManager;
+
+export class Orange : public Fruit {
+private:
+	sf::Sprite orange;
+public:
+	virtual void drawFruit(sf::RenderWindow& window);
+	virtual sf::Sprite& getFruit();
+	virtual void effect(Snake& snake, int& score, float& speed, bool& isReverse, bool& isImmune);
+	static std::array<int, 2> getProbability(int& score);
+};
 
 void Orange::drawFruit(sf::RenderWindow& window) {
     orange.setTexture(ResourcesMan::getBoardTexture("orange"));
@@ -14,7 +28,7 @@ void Orange::effect(Snake& snake, int& score, float& speed, bool& isReverse, boo
     isReverse = true;
     isImmune = false;
     if (speed > 40.f)
-        speed -= 2.f;
+        speed -= 3.f;
 }
 
 std::array<int, 2> Orange::getProbability(int& score) {

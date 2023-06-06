@@ -1,25 +1,30 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <regex>
 #include <filesystem>
 #include <fstream>
 
 #include <SFML/Graphics.hpp>
-#include "Button.h"
+#include "Scene.h"
 #include "MainMenu.h"
 #include "Game.h"
-#include "ResourcesManager.h"
 
-class Save {
+import Button;
+import ResourcesManager;
+
+class Save : public Scene{
 private:
-	sf::Text info;
-	sf::Text input;
-	sf::Text returnInfo;
+	sf::Text saveTxt;
+	sf::Text inputTxt;
+	sf::Text returnInfoTxt;
 	Button menuBtn;
 	std::string inputStr;
+	std::unique_ptr<Scene> scenePtr;
 public:
-	void show_save(sf::RenderWindow& window);
+	Save();
+	virtual void setScene(sf::RenderWindow& window);
 	void savePlayerData(std::string& playerName, int& score);
-	void save_option(sf::RenderWindow& window);
+	virtual void windowHandle(sf::RenderWindow& window);
 };

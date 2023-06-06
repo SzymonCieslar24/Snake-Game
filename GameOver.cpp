@@ -1,26 +1,30 @@
 #include "GameOver.h"
 
-void GameOver::show_gameOver(sf::RenderWindow& window) {
+GameOver::GameOver():
+	overTxt("GAME OVER", ResourcesMan::getFont("primary"),180),
+	scoreTxt("Your score: " + std::to_string(Game::getScore()), ResourcesMan::getFont("primary"), 100),
+	playAgainBtn("Play Again", ResourcesMan::getFont("primary"), 60, { 800, 100 }, sf::Color(110, 120, 110), sf::Color::White),
+	saveScoreBtn("Save score", ResourcesMan::getFont("primary"), 60, { 800, 100 }, sf::Color(110, 120, 110), sf::Color::White),
+	menuBtn("Go to main menu", ResourcesMan::getFont("primary"), 60, { 800, 100 }, sf::Color(110, 120, 110), sf::Color::White),
+	scenePtr(nullptr)
+{
+	overTxt.setFillColor(sf::Color::Red);
+	overTxt.setOrigin(overTxt.getLocalBounds().left + overTxt.getLocalBounds().width / 2.0f, overTxt.getLocalBounds().top + overTxt.getLocalBounds().height / 2.0f);
+	scoreTxt.setFillColor(sf::Color::White);
+	scoreTxt.setOrigin(scoreTxt.getLocalBounds().left + scoreTxt.getLocalBounds().width / 2.0f, scoreTxt.getLocalBounds().top + scoreTxt.getLocalBounds().height / 2.0f);
+}
+
+void GameOver::setScene(sf::RenderWindow& window) {
 	float xPos = window.getSize().x / 2.f;
 	float yPos = window.getSize().y / 2.f;
-	playAgainBtn.init("Play Again", ResourcesMan::getFont("primary"), 60, { 800, 100 }, { xPos, yPos}, sf::Color(110, 120, 110), sf::Color::White);
-	saveScoreBtn.init("Save score", ResourcesMan::getFont("primary"), 60, { 800, 100 }, { xPos, yPos + 140.f }, sf::Color(110, 120, 110), sf::Color::White);
-	menuBtn.init("Go to main menu", ResourcesMan::getFont("primary"), 60, { 800, 100 }, { xPos, yPos + 280.f }, sf::Color(110, 120, 110), sf::Color::White);
-	txt1.setString("GAME OVER");
-	txt1.setCharacterSize(180);
-	txt1.setFont(ResourcesMan::getFont("primary"));
-	txt1.setFillColor(sf::Color::Red);
-	txt1.setPosition(xPos, yPos - 300.0f);
-	txt1.setOrigin(txt1.getLocalBounds().left + txt1.getLocalBounds().width / 2.0f, txt1.getLocalBounds().top + txt1.getLocalBounds().height / 2.0f);
-	txt2.setString("Your score: " + std::to_string(Game::getScore()));
-	txt2.setCharacterSize(100);
-	txt2.setFont(ResourcesMan::getFont("primary"));
-	txt2.setFillColor(sf::Color::White);
-	txt2.setPosition(xPos, yPos - 150.0f);
-	txt2.setOrigin(txt2.getLocalBounds().left + txt2.getLocalBounds().width / 2.0f, txt2.getLocalBounds().top + txt2.getLocalBounds().height / 2.0f);
-	gameOver_option(window);
+	playAgainBtn.setBtnPosition({ xPos, yPos });
+	saveScoreBtn.setBtnPosition({ xPos, yPos +140.f});
+	menuBtn.setBtnPosition({ xPos, yPos +280.f});
+	overTxt.setPosition(xPos, yPos - 300.0f);
+	scoreTxt.setPosition(xPos, yPos - 150.0f);
+	windowHandle(window);
 }
-void GameOver::gameOver_option(sf::RenderWindow& window) {
+void GameOver::windowHandle(sf::RenderWindow& window) {
 	while (window.isOpen()) {
 		sf::Event e;
 		while (window.pollEvent(e)) {
@@ -47,17 +51,17 @@ void GameOver::gameOver_option(sf::RenderWindow& window) {
 			case sf::Event::MouseButtonPressed:
 				if (e.mouseButton.button == sf::Mouse::Left) {
 					if (playAgainBtn.isMouseHover(window)) {
-						Game g;
-						g.initMap(window);
+						scenePtr = std::make_unique<Game>();
+						scenePtr->setScene(window);
 						break;
 					}
 					else if (saveScoreBtn.isMouseHover(window)) {
-						Save s;
-						s.show_save(window);
+						scenePtr = std::make_unique<Save>();
+						scenePtr->setScene(window);
 					}
 					else if (menuBtn.isMouseHover(window)) {
-						Main_menu m;
-						m.show_menu(window);
+						scenePtr = std::make_unique<Main_menu>();
+						scenePtr->setScene(window);
 						break;
 					}
 				}
@@ -65,8 +69,8 @@ void GameOver::gameOver_option(sf::RenderWindow& window) {
 			}
 		}
 		window.clear();
-		window.draw(txt1);
-		window.draw(txt2);
+		window.draw(overTxt);
+		window.draw(scoreTxt);
 		playAgainBtn.drawTo(window);
 		saveScoreBtn.drawTo(window);
 		menuBtn.drawTo(window);

@@ -1,5 +1,30 @@
 #include "Game.h"
-int Game::score;
+
+int Game::score = 0;
+
+Game::Game() :
+	isPaused(false),
+	isReverse(false),
+	isImmune(false),
+	speed(80.f),
+	pastTime(sf::Time::Zero),
+	snakeDirection(0.f, -32.f),
+	fruitPtr(std::make_unique<Apple>()),
+	scenePtr(nullptr),
+	grass(ResourcesMan::getBoardTexture("grass")),
+	scoreTxt("", ResourcesMan::getFont("primary"), 40),
+	pauseTxt("Paused", ResourcesMan::getFont("primary"), 120),
+	timeTxt("", ResourcesMan::getFont("primary"), 40),
+	pauseInfoTxt("Press escape to pause the game.", ResourcesMan::getFont("primary"), 40)
+{
+	score = 0;
+	pauseTxt.setFillColor(sf::Color::Green);
+	pauseTxt.setOrigin(pauseTxt.getLocalBounds().left + pauseTxt.getLocalBounds().width / 2.0f, pauseTxt.getLocalBounds().top + pauseTxt.getLocalBounds().height / 2.0f);
+	scoreTxt.setFillColor(sf::Color::White);
+	timeTxt.setFillColor(sf::Color::White);
+	pauseInfoTxt.setFillColor(sf::Color::White);
+	pauseInfoTxt.setOrigin(pauseInfoTxt.getLocalBounds().left + pauseInfoTxt.getLocalBounds().width / 2.0f, 0);
+}
 
 void Game::startGame() {
 	sf::RenderWindow window(sf::VideoMode(1920, 1088), "Snake Game", sf::Style::Close);
@@ -15,65 +40,35 @@ void Game::startGame() {
 	ResourcesMan::loadSnakeTexture("textures/snakeHeadRight.png", "textures/snakeBodyLeftRight.png", "textures/snakeTailRight.png", ResourcesMan::Right);
 	ResourcesMan::loadSnakeTexture("textures/snakeHeadDown.png", "textures/snakeBodyUpDown.png", "textures/snakeTailDown.png", ResourcesMan::Down);
 	ResourcesMan::loadSnakeTexture("textures/snakeHeadLeft.png", "textures/snakeBodyLeftRight.png", "textures/snakeTailLeft.png", ResourcesMan::Left);
-	Main_menu menu;
-	menu.show_menu(window);
+	scenePtr = std::make_unique<Main_menu>();
+	scenePtr->setScene(window);
 }
 
-void Game::initMap(sf::RenderWindow &window) {
-	isPaused = false;
-	isReverse = false;
-	isImmune = false;
-	score = 0;
-	speed = 90.f;
-	pastTime = sf::Time::Zero;
+void Game::setScene(sf::RenderWindow &window) {
 	timePerFrame = sf::seconds(1.f / speed);
-	snakeDirection = { 0.f, -32.f };
-	applePtr = new Apple;
-	bananaPtr = new Banana;
-	orangePtr = new Orange;
-	strawberryPtr = new Strawberry;
-	fruitPtr = applePtr;
-	scoreText.setString("Score: " + std::to_string(score));
-	scoreText.setCharacterSize(40);
-	scoreText.setFont(ResourcesMan::getFont("primary"));
-	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(48.f, 0);
-	timeText.setCharacterSize(40);
-	timeText.setFont(ResourcesMan::getFont("primary"));
-	timeText.setFillColor(sf::Color::White);
-	timeText.setPosition(window.getSize().x - 375.f, 0);
-	pauseText.setString("Paused");
-	pauseText.setCharacterSize(120);
-	pauseText.setFont(ResourcesMan::getFont("primary"));
-	pauseText.setFillColor(sf::Color::Green);
-	pauseText.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-	pauseText.setOrigin(pauseText.getLocalBounds().left + pauseText.getLocalBounds().width / 2.0f, pauseText.getLocalBounds().top + pauseText.getLocalBounds().height / 2.0f);
-	pauseInfo.setString("Press escape to pause the game.");
-	pauseInfo.setCharacterSize(40);
-	pauseInfo.setFont(ResourcesMan::getFont("primary"));
-	pauseInfo.setFillColor(sf::Color::White);
-	pauseInfo.setPosition(window.getSize().x / 2.0f, 0);
-	pauseInfo.setOrigin(pauseInfo.getLocalBounds().left + pauseInfo.getLocalBounds().width / 2.0f, 0);
-	grass.setTexture(ResourcesMan::getBoardTexture("grass"));
+	scoreTxt.setString("Score: " + std::to_string(score));
+	scoreTxt.setPosition(48.f, 0);
+	timeTxt.setPosition(window.getSize().x - 375.f, 0);
+	pauseTxt.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+	pauseInfoTxt.setPosition(window.getSize().x / 2.0f, 0);
+	fruitPtr->getFruit().setPosition(generateFruitPos(window));
+	windowHandle(window);
+}
+
+void Game::drawWalls(sf::RenderWindow& window) {
 	int windowX = (int)window.getSize().x;
 	int windowY = (int)window.getSize().y;
-	for (int i = 0; i < walls.size(); i++) 
+	for (int i = 0; i < walls.size(); i++)
 	{
 		walls[i].setTexture(ResourcesMan::getBoardTexture("wall"));
 	}
 	grass.setTextureRect({ 0,0, windowX, windowY });
-	walls[0].setTextureRect({0,0, windowX, 48});
-	walls[1].setTextureRect({48,0, windowX, 48});
+	walls[0].setTextureRect({ 0,0, windowX, 48 });
+	walls[1].setTextureRect({ 48,0, windowX, 48 });
 	walls[1].setPosition(0, windowY - 48);
-	walls[2].setTextureRect({0,0, 48, windowY });
-	walls[3].setTextureRect({0,0, 48, windowY });
+	walls[2].setTextureRect({ 0,0, 48, windowY });
+	walls[3].setTextureRect({ 0,0, 48, windowY });
 	walls[3].setPosition(windowX - 48, 0);
-	snake.initSnake();
-	fruitPtr->getFruit().setPosition(generateFruitPos(window));
-	gameOptions(window);
-}
-
-void Game::drawWalls(sf::RenderWindow& window) {
 	for (int i = 0; i < walls.size(); i++)
 	{
 		window.draw(walls[i]);
@@ -86,16 +81,17 @@ void Game::update(sf::Time& time, sf::RenderWindow& window) {
 	{
 		for (auto& wall : walls)
 		{
-			if (snake.isSnakeOnSmth(wall)) {
-				GameOver g;
-				g.show_gameOver(window);
+			if (snake.isSnakeOnSmth(wall)) 
+			{
+				scenePtr = std::make_unique<GameOver>();
+				scenePtr -> setScene(window);
 				break;
 			}
 		}
 		if (snake.isSelfEating() && !isImmune)
 		{
-			GameOver g;
-			g.show_gameOver(window);
+			scenePtr = std::make_unique<GameOver>();
+			scenePtr->setScene(window);
 		}
 		if (snake.isSnakeOnSmth(fruitPtr -> getFruit()))
 		{
@@ -108,23 +104,27 @@ void Game::update(sf::Time& time, sf::RenderWindow& window) {
 			std::array<int, 2> orangeP = Orange::getProbability(score);
 			std::array<int, 2> strawberryP = Strawberry::getProbability(score);
 			if (randNum>=appleP[0] && randNum < appleP[1]) {
-				fruitPtr = applePtr;
+				fruitPtr = std::make_unique<Apple>();
 			}
 			else if (randNum >= bananaP[0] && randNum < bananaP[1]) {
-				fruitPtr = bananaPtr;
+				fruitPtr = std::make_unique<Banana>();
 			}
 			else if (randNum >= orangeP[0] && randNum < orangeP[1]) {
-				fruitPtr = orangePtr;
+				fruitPtr = std::make_unique<Orange>();
 			}
 			else if (randNum >= strawberryP[0] && randNum < strawberryP[1]) {
-				fruitPtr = strawberryPtr;
+				fruitPtr = std::make_unique<Strawberry>();
 			}
-			scoreText.setString("Score: " + std::to_string(score));
+			scoreTxt.setString("Score: " + std::to_string(score));
 			fruitPtr->getFruit().setPosition(generateFruitPos(window));
 		}
 		snake.moveSnake(snakeDirection);
 		pastTime = sf::Time::Zero;
 	}
+}
+
+int& Game::getScore() {
+	return score;
 }
 
 sf::Vector2f& Game::generateFruitPos(sf::RenderWindow& window) {
@@ -149,14 +149,10 @@ void Game::timeInGame() {
 	int seconds = gameTime.asSeconds();
 	int minutes = seconds / 60;
 	seconds %= 60;
-	timeText.setString("Time in game: " + std::to_string(minutes) + ":" + std::to_string(seconds));
+	timeTxt.setString("Time in game: " + std::to_string(minutes) + ":" + std::to_string(seconds));
 }
 
-int& Game::getScore() {
-	return score;
-}
-
-void Game::gameOptions(sf::RenderWindow& window) {
+void Game::windowHandle(sf::RenderWindow& window) {
 	while (window.isOpen()) {
 		sf::Event e;
 		if (!isPaused) {
@@ -219,19 +215,19 @@ void Game::gameOptions(sf::RenderWindow& window) {
 				}
 			}
 		}
-		window.clear();
-		window.draw(grass);
-		drawWalls(window);
-		window.draw(scoreText);
-		window.draw(timeText);
-		fruitPtr->drawFruit(window);
-		snake.drawSnake(window);
-		pauseInfo.setString("Press escape to pause the game.");
-		if (isPaused) {
-			pauseInfo.setString("Press escape to return to game.");
-			window.draw(pauseText);
-		}
-		window.draw(pauseInfo);
-		window.display();
+	window.clear();
+	window.draw(grass);
+	drawWalls(window);
+	window.draw(scoreTxt);
+	window.draw(timeTxt);
+	fruitPtr->drawFruit(window);
+	snake.drawSnake(window);
+	pauseInfoTxt.setString("Press escape to pause the game.");
+	if (isPaused) {
+		pauseInfoTxt.setString("Press escape to return to game.");
+		window.draw(pauseTxt);	
+	}
+	window.draw(pauseInfoTxt);
+	window.display();
 	}
 }

@@ -1,4 +1,48 @@
-#include "ResourcesManager.h"
+export module ResourcesManager;
+
+import <array>;
+import <filesystem>;
+import <iostream>;
+import <regex>;
+import <SFML/Graphics.hpp>;
+
+export class ResourcesMan {
+private:
+	static sf::Font primary;
+	static sf::Font secondary;
+	static std::array<sf::Texture, 3> snakeTexUp;
+	static std::array<sf::Texture, 3> snakeTexRight;
+	static std::array<sf::Texture, 3> snakeTexDown;
+	static std::array<sf::Texture, 3> snakeTexLeft;
+	static sf::Texture grassTex;
+	static sf::Texture wallTex;
+	static sf::Texture appleTex;
+	static sf::Texture bananaTex;
+	static sf::Texture orangeTex;
+	static sf::Texture strawberryTex;
+	static sf::Texture snakeHeadTex;
+	static sf::Texture snakeBodyTex;
+	static sf::Texture snakeTailTex;
+public:
+	enum Direction {
+		Up,
+		Right,
+		Down,
+		Left
+	};
+	enum snakeParts {
+		Head,
+		Body,
+		Tail
+	};
+	static void loadFont(const std::string& filename, const std::string& fontname);
+	static sf::Font& getFont(const std::string& name);
+	static void loadTexture(const std::string& filename, sf::Texture& tex);
+	static void loadBoardTexture(const std::string& filename);
+	static sf::Texture& getBoardTexture(const std::string& name);
+	static void loadSnakeTexture(const std::string& snakeHead, const std::string& snakeBody, const std::string& snakeTail, Direction dir);
+	static std::array<sf::Texture, 3>& getSnakeTexture(Direction dir);
+};
 
 sf::Font ResourcesMan::primary;
 sf::Font ResourcesMan::secondary;
@@ -61,7 +105,7 @@ void ResourcesMan::loadTexture(const std::string& filename, sf::Texture& tex) {
     }
 }
 void ResourcesMan::loadBoardTexture(const std::string& filename) {
-    std::regex base_regex ("([^/]+)(?=\\.png)");
+    std::regex base_regex("([^/]+)(?=\\.png)");
     std::smatch base_match;
     if (std::regex_search(filename, base_match, base_regex)) {
         std::string textureName = base_match.str(1);
@@ -120,9 +164,6 @@ void ResourcesMan::loadSnakeTexture(const std::string& snakeHead, const std::str
     loadTexture(snakeHead, snakeHeadTex);
     loadTexture(snakeBody, snakeBodyTex);
     loadTexture(snakeTail, snakeTailTex);
-    //base_regex = ("([^/]+)(?=\\.png)");
-    //if (std::regex_search(snakeHead, base_match, base_regex)) {
-    //    std::string textureName = base_match.str(1);
     switch (dir) {
     case Up:
         snakeTexUp[0] = snakeHeadTex;

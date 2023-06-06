@@ -1,4 +1,18 @@
-#include "Banana.h"
+export module Banana;
+
+import <SFML/Graphics.hpp>;
+import Fruit;
+import ResourcesManager;
+
+export class Banana : public Fruit {
+private:
+	sf::Sprite banana;
+public:
+	virtual void drawFruit(sf::RenderWindow& window);
+	virtual sf::Sprite& getFruit();
+	virtual void effect(Snake& snake, int& score, float& speed, bool& isReverse, bool& isImmune);
+	static std::array<int, 2> getProbability(int& score);
+};
 
 void Banana::drawFruit(sf::RenderWindow& window) {
     banana.setTexture(ResourcesMan::getBoardTexture("banana"));
@@ -15,10 +29,10 @@ void Banana::effect(Snake& snake, int& score, float& speed, bool& isReverse, boo
     isReverse = false;
     isImmune = false;
     if (speed > 40.f)
-        speed -= 5.f;
+        speed -= 10.f;
 }
 
-std::array<int,2> Banana::getProbability(int& score) {
+std::array<int, 2> Banana::getProbability(int& score) {
     if (score < 20) {
         return { 0,0 };
     }

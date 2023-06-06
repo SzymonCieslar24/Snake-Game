@@ -1,11 +1,39 @@
-#include "Snake.h"
+export module Snake;
 
-void Snake::initSnake() {
+import <iostream>;
+import <list>;
+import <ranges>;
+import <algorithm>;
+import <SFML/Graphics.hpp>;
+
+import ResourcesManager;
+
+export class Snake {
+private:
+	sf::Vector2f startPos;
+	ResourcesMan::Direction startDir;
+	std::list<sf::Sprite> snakeBody;
+	std::list<sf::Sprite>::iterator snakeHead;
+	std::list<sf::Sprite>::iterator snakeTail;
+	int snakeSize;
+public:
+	Snake();
+	void drawSnake(sf::RenderWindow& window);
+	ResourcesMan::Direction getPieceDirection(sf::Vector2f oldPosition, sf::Vector2f& moveDirection);
+	void moveSnake(sf::Vector2f& moveDirection);
+	void growSnake();
+	bool isSnakeOnSmth(sf::Sprite& something);
+	bool isSelfEating();
+};
+
+Snake::Snake() :
+	snakeSize(5),
+	startPos({ 944,624 }),
+	startDir(ResourcesMan::Up)
+{
 	snakeBody.resize(snakeSize);
 	snakeHead = snakeBody.begin();
 	snakeTail = std::prev(snakeBody.end());
-	startPos = { 944, 624 };
-	startDir = ResourcesMan::Up;
 	snakeHead->setPosition(startPos);
 	snakeHead->setTexture(ResourcesMan::getSnakeTexture(startDir)[ResourcesMan::Head]);
 	startPos.y += 32;

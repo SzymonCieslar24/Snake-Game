@@ -1,28 +1,34 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <regex>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <ranges>
+#include <algorithm>
 
 #include <SFML/Graphics.hpp>
-#include "Button.h"
+#include "Scene.h"
 #include "MainMenu.h"
 #include "Game.h"
-#include "ResourcesManager.h"
 
-class Leaderboard {
+import Button;
+import ResourcesManager;
+
+class Leaderboard : public Scene{
 private:
-	sf::Text leaderboard;
-	sf::Text nameLabel;
-	sf::Text scoreLabel;
-	sf::Text playersNames;
+	sf::Text leaderTxt;
+	sf::Text nameLabelTxt;
+	sf::Text scoreLabelTxt;
+	sf::Text playersNamesTxt;
+	sf::Text playersScoresTxt;
 	sf::RectangleShape top;
 	sf::RectangleShape bottom;
-	sf::Text playersScores;
 	Button menuBtn;
+	std::unique_ptr<Scene> scenePtr;
 	struct PlayerData {
 		std::string name;
 		int score;
@@ -37,7 +43,8 @@ private:
 	};
 	std::vector<PlayerData> players;
 public:
-	void show_leader(sf::RenderWindow& window);
+	Leaderboard();
+	virtual void setScene(sf::RenderWindow& window);
 	void loadPlayerData();
-	void leader_option(sf::RenderWindow& window);
+	virtual void windowHandle(sf::RenderWindow& window);
 };

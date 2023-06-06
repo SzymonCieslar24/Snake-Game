@@ -1,4 +1,18 @@
-#include "Strawberry.h"
+export module Strawberry;
+
+import <SFML/Graphics.hpp>;
+import Fruit;
+import ResourcesManager;
+
+export class Strawberry : public Fruit {
+private:
+	sf::Sprite strawberry;
+public:
+	virtual void drawFruit(sf::RenderWindow& window);
+	virtual sf::Sprite& getFruit();
+	virtual void effect(Snake& snake, int& score, float& speed, bool& isReverse, bool& isImmune);
+	static std::array<int, 2> getProbability(int& score);
+};
 
 void Strawberry::drawFruit(sf::RenderWindow& window) {
     strawberry.setTexture(ResourcesMan::getBoardTexture("strawberry"));
