@@ -35,7 +35,15 @@ How to play?: <br>
 5. Save your score and simply play again to beat your previous score.. <br>
 <br>
 Screenshots showing the appearance of the game are below. <br>
-![image](https://github.com/SzymonCieslar24/Snake-Game/assets/108759086/e8fedd45-5dc1-4326-badb-5cf7e9edbf34)
+<br>
 
+![Snake1](https://github.com/SzymonCieslar24/Snake-Game/assets/108759086/618e6e66-b081-465d-bae4-7d309d0d4276)
 
+<br>
+
+![Snake2](https://github.com/SzymonCieslar24/Snake-Game/assets/108759086/8c1fb073-cba0-4dd1-8075-1673fe7a30b6)
+
+<br>
+
+![Snake3](https://github.com/SzymonCieslar24/Snake-Game/assets/108759086/ed245f63-aa81-4b3e-9a89-0fb948ffde73)
 
